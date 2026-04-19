@@ -31,7 +31,7 @@ import {
   SiNetlify
 } from "react-icons/si";
 
-const ICONS: Record<string, JSX.Element> = {
+const ICONS: Record<string, React.ReactNode> = {
   "React": <FaReact className="text-sky-400 w-6 h-6" />,
   "Next.js": <SiNextdotjs className="text-white w-6 h-6" />,
   "Node.js": <FaNodeJs className="text-green-500 w-6 h-6" />,
