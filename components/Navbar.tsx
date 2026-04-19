@@ -39,7 +39,7 @@ export default function Navbar() {
       const pos = getPos(btn);
       setTrail({ left: pos.left, width: pos.width, opacity: 0.9, fading: false });
     }
-  }, []);
+  }, [activeTab]);
 
   const handleTabClick = useCallback(
     (tab: string, index: number) => {

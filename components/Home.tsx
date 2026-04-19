@@ -79,12 +79,21 @@ const stagger: any = (i: number) => ({
 });
 
 export default function HomePage() {
+  const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 769px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const updateVideoPreference = () => setShowVideo(mediaQuery.matches);
+
+    updateVideoPreference();
+    mediaQuery.addEventListener("change", updateVideoPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateVideoPreference);
+  }, []);
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
         .video-bg {
           position: fixed;
           top: 0; left: 0;
@@ -110,7 +119,7 @@ export default function HomePage() {
           padding-bottom: 24px;
           box-sizing: border-box;
           overflow: hidden;
-          font-family: 'DM Sans', sans-serif;
+          font-family: system-ui, sans-serif;
           color: #e8e8f0;
         }
 
@@ -392,9 +401,20 @@ export default function HomePage() {
         }
       `}</style>
 
-      <video autoPlay loop muted playsInline className="video-bg">
-        <source src="/assets/homepage.mp4" type="video/mp4" />
-      </video>
+      {showVideo ? (
+        <video autoPlay loop muted playsInline className="video-bg">
+          <source src="/assets/homepage.mp4" type="video/mp4" />
+        </video>
+      ) : (
+        <div
+          className="video-bg"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(circle at top left, rgba(80,160,255,0.2), transparent 35%), linear-gradient(180deg, #07111c 0%, #05070d 50%, #040508 100%)",
+          }}
+        />
+      )}
       <div className="video-overlay" />
 
       <div id="home" className="hp-root">

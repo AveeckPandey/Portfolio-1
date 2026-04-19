@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 interface Project {
@@ -85,6 +86,7 @@ export default function Projects() {
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [visible, setVisible] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   // Touch/swipe state
@@ -98,6 +100,16 @@ export default function Projects() {
     );
     if (sectionRef.current) obs.observe(sectionRef.current);
     return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 769px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const updateVideoPreference = () => setShowVideo(mediaQuery.matches);
+
+    updateVideoPreference();
+    mediaQuery.addEventListener("change", updateVideoPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateVideoPreference);
   }, []);
 
   const goTo = useCallback(
@@ -298,11 +310,25 @@ export default function Projects() {
         onTouchEnd={handleTouchEnd}
       >
         {/* Video background */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-          autoPlay loop muted playsInline
-          src="/assets/Project.mp4"
-        />
+        {showVideo ? (
+          <video
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+            autoPlay
+            loop
+            muted
+            playsInline
+            src="/assets/Project.mp4"
+          />
+        ) : (
+          <div
+            className="absolute inset-0"
+            aria-hidden="true"
+            style={{
+              background:
+                "radial-gradient(circle at top right, rgba(167,139,250,0.18), transparent 32%), linear-gradient(180deg, #040507 0%, #010205 100%)",
+            }}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-[#010205]/80 via-transparent to-[#010205]/80 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#010205]/60 via-transparent to-[#010205]/60 pointer-events-none" />
 
@@ -368,7 +394,7 @@ export default function Projects() {
 
                 {/* Mock screen */}
                 <div
-                  className="my-5 rounded-xl overflow-hidden flex items-center justify-center"
+                  className="my-5 rounded-xl overflow-hidden flex items-center justify-center relative"
                   style={{
                     background: `linear-gradient(135deg, ${project.color}11 0%, rgba(255,255,255,0.02) 100%)`,
                     border: `1px solid ${project.color}22`,
@@ -376,10 +402,12 @@ export default function Projects() {
                   }}
                 >
                   {project.image ? (
-                    <img
+                    <Image
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-40 object-cover rounded-xl"
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-cover rounded-xl"
                     />
                   ) : (
                     <div className="flex flex-col items-center gap-3 py-8">

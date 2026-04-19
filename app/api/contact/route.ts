@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
     const { name, email, message } = await req.json();
@@ -9,19 +11,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // 🔐 Configure transporter (Gmail example)
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+    const emailTo = process.env.EMAIL_TO || emailUser;
+
+    if (!emailUser || !emailPass || !emailTo) {
+      return NextResponse.json(
+        { error: "Email service is not configured on the server." },
+        { status: 500 }
+      );
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // App password (not normal password)
+        user: emailUser,
+        pass: emailPass,
       },
     });
 
-    // 📩 Mail content
     await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER, // you receive mail
+      from: `"Portfolio Contact" <${emailUser}>`,
+      to: emailTo,
       replyTo: email,
       subject: `New message from ${name}`,
       html: `
@@ -36,6 +47,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to send" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
   }
 }

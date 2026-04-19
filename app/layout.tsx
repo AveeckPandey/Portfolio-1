@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SmoothScroll from "../components/SmoothScroll";
+import Preloader from "../components/Preloader";
 
 export const metadata: Metadata = {
   title: "Aveeck Portfolio",
   description: "Aveeck Portfolio",
 };
-
-import SmoothScroll from "../components/SmoothScroll";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.png" type="image/png" />
       </head>
       <body style={{ margin: 0, background: "#080808" }}>
+        <Preloader />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

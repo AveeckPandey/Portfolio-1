@@ -108,76 +108,93 @@ function RadarChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const prefersLightAnimation = window.matchMedia("(max-width: 768px), (pointer: coarse), (prefers-reduced-motion: reduce)").matches;
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
     const W = 300, H = 300, cx = W / 2, cy = H / 2, R = 90;
     const N = RADAR_AXES.length;
 
-    let prog = 0;
+    let frameId = 0;
+    let prog = prefersLightAnimation ? 1 : 0;
+
+    const drawFrame = (progress: number) => {
+      ctx.clearRect(0, 0, W, H);
+
+      [0.4, 0.7, 1].forEach(f => {
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
+          const x = cx + Math.cos(a) * R * f;
+          const y = cy + Math.sin(a) * R * f;
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.closePath();
+        ctx.strokeStyle = "rgba(255,255,255,0.05)";
+        ctx.stroke();
+      });
+
+      ctx.beginPath();
+      RADAR_AXES.forEach((ax, i) => {
+        const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
+        const x = cx + Math.cos(a) * R * ax.val * progress;
+        const y = cy + Math.sin(a) * R * ax.val * progress;
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      ctx.closePath();
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+      grad.addColorStop(0, "rgba(59,130,246,0.1)");
+      grad.addColorStop(1, "rgba(59,130,246,0.4)");
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = "#3b82f6";
+      ctx.strokeStyle = "rgba(96,165,250,0.8)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      RADAR_AXES.forEach((ax, i) => {
+        const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
+        const lx = cx + Math.cos(a) * (R + 25);
+        const ly = cy + Math.sin(a) * (R + 25);
+        ctx.font = "bold 9px Inter";
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.textAlign = "center";
+        ctx.fillText(ax.label, lx, ly);
+
+        const dx = cx + Math.cos(a) * R * ax.val * progress;
+        const dy = cy + Math.sin(a) * R * ax.val * progress;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 3, 0, Math.PI * 2);
+        ctx.fillStyle = ax.color;
+        ctx.fill();
+      });
+    };
+
     const animate = () => {
       if (prog < 1) {
         prog += 0.02;
-        ctx.clearRect(0, 0, W, H);
-
-        // Grid rings
-        [0.4, 0.7, 1].forEach(f => {
-          ctx.beginPath();
-          for (let i = 0; i < N; i++) {
-            const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
-            const x = cx + Math.cos(a) * R * f;
-            const y = cy + Math.sin(a) * R * f;
-            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-          }
-          ctx.closePath();
-          ctx.strokeStyle = "rgba(255,255,255,0.05)";
-          ctx.stroke();
-        });
-
-        // Data web
-        ctx.beginPath();
-        RADAR_AXES.forEach((ax, i) => {
-          const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
-          const x = cx + Math.cos(a) * R * ax.val * prog;
-          const y = cy + Math.sin(a) * R * ax.val * prog;
-          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        });
-        ctx.closePath();
-
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
-        grad.addColorStop(0, "rgba(59,130,246,0.1)");
-        grad.addColorStop(1, "rgba(59,130,246,0.4)");
-        ctx.fillStyle = grad;
-        ctx.fill();
-
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = "#3b82f6";
-        ctx.strokeStyle = "rgba(96,165,250,0.8)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-
-        // Labels & dots
-        RADAR_AXES.forEach((ax, i) => {
-          const a = -Math.PI / 2 + (i * Math.PI * 2) / N;
-          const lx = cx + Math.cos(a) * (R + 25);
-          const ly = cy + Math.sin(a) * (R + 25);
-          ctx.font = "bold 9px Inter";
-          ctx.fillStyle = "rgba(255,255,255,0.4)";
-          ctx.textAlign = "center";
-          ctx.fillText(ax.label, lx, ly);
-
-          const dx = cx + Math.cos(a) * R * ax.val * prog;
-          const dy = cy + Math.sin(a) * R * ax.val * prog;
-          ctx.beginPath();
-          ctx.arc(dx, dy, 3, 0, Math.PI * 2);
-          ctx.fillStyle = ax.color;
-          ctx.fill();
-        });
-
-        requestAnimationFrame(animate);
+        drawFrame(prog);
+        frameId = requestAnimationFrame(animate);
       }
     };
-    animate();
+
+    drawFrame(prog);
+    if (!prefersLightAnimation) {
+      frameId = requestAnimationFrame(animate);
+    }
+
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
   return <canvas ref={canvasRef} width={300} height={300} />;
@@ -187,6 +204,7 @@ function RadarChart() {
 export default function Skills() {
   const [activeCategory, setActiveCategory] = useState("Web Dev");
   const [visible, setVisible] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -196,6 +214,16 @@ export default function Skills() {
     );
     if (sectionRef.current) obs.observe(sectionRef.current);
     return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 769px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const updateVideoPreference = () => setShowVideo(mediaQuery.matches);
+
+    updateVideoPreference();
+    mediaQuery.addEventListener("change", updateVideoPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateVideoPreference);
   }, []);
 
   const glass =
@@ -208,11 +236,25 @@ export default function Skills() {
       className="relative w-full min-h-screen bg-[#05060a] flex flex-col items-center py-24 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background Video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
-        autoPlay loop muted playsInline
-        src="/assets/skills.mp4"
-      />
+      {showVideo ? (
+        <video
+          className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
+          autoPlay
+          loop
+          muted
+          playsInline
+          src="/assets/skills.mp4"
+        />
+      ) : (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 0%, rgba(30,41,59,0.8), transparent 45%), linear-gradient(180deg, #05060a 0%, #030408 100%)",
+          }}
+        />
+      )}
 
       {/* Mesh Background */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,#1e293b,transparent)] opacity-40 z-0" />
