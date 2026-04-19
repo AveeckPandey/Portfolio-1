@@ -262,6 +262,9 @@ export default function Projects() {
           .proj-card {
             min-height: 0;
             border-radius: 16px;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: rgba(20, 25, 30, 0.45);
           }
           .proj-card-inner {
             padding: 18px 18px;

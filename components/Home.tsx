@@ -1,7 +1,6 @@
-"use client"
-import { useEffect, useRef, useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
 
 const roles = ["a Full Stack Developer", "an AI/ML Engineer", "a GenAI Builder", "a Creative Technologist"];
 
@@ -80,13 +79,6 @@ const stagger: any = (i: number) => ({
 });
 
 export default function HomePage() {
-  const orb1 = useRef(null);
-  const orb2 = useRef(null);
-
-  useEffect(() => {
-    if (orb1.current) gsap.to(orb1.current, { y: -22, x: 12, duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    if (orb2.current) gsap.to(orb2.current, { y: 18, x: -10, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1 });
-  }, []);
 
   return (
     <>
@@ -128,16 +120,27 @@ export default function HomePage() {
           pointer-events: none;
           z-index: 0;
           filter: blur(72px);
+          will-change: transform;
+        }
+        @keyframes floatOrb1 {
+          0% { transform: translate(0px, 0px); }
+          100% { transform: translate(12px, -22px); }
+        }
+        @keyframes floatOrb2 {
+          0% { transform: translate(0px, 0px); }
+          100% { transform: translate(-10px, 18px); }
         }
         .hp-orb-1 {
           width: 360px; height: 360px;
           background: radial-gradient(circle, rgba(80,160,255,0.15) 0%, transparent 70%);
           top: -80px; left: -80px;
+          animation: floatOrb1 5s ease-in-out infinite alternate;
         }
         .hp-orb-2 {
           width: 280px; height: 280px;
           background: radial-gradient(circle, rgba(160,80,255,0.11) 0%, transparent 70%);
           bottom: 10px; right: -50px;
+          animation: floatOrb2 6s ease-in-out infinite alternate 1s;
         }
 
         /* ── BENTO GRID ── */
@@ -369,6 +372,11 @@ export default function HomePage() {
             grid-column: 1;
             grid-row: auto;
           }
+          .hp-card {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: rgba(30, 35, 45, 0.3);
+          }
           .hp-name {
             font-size: clamp(2rem, 10vw, 2.8rem);
           }
@@ -390,8 +398,8 @@ export default function HomePage() {
       <div className="video-overlay" />
 
       <div id="home" className="hp-root">
-        <div className="hp-orb hp-orb-1" ref={orb1} />
-        <div className="hp-orb hp-orb-2" ref={orb2} />
+        <div className="hp-orb hp-orb-1" />
+        <div className="hp-orb hp-orb-2" />
 
         <div className="hp-bento">
 

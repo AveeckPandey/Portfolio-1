@@ -199,7 +199,7 @@ export default function Skills() {
   }, []);
 
   const glass =
-    "bg-[#ffffff03] border border-white/[0.06] rounded-[32px] backdrop-blur-xl shadow-2xl";
+    "bg-slate-900/40 sm:bg-[#ffffff03] border border-white/[0.06] rounded-[32px] sm:backdrop-blur-xl shadow-2xl";
 
   return (
     <section
