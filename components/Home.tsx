@@ -70,7 +70,8 @@ function RoleTypewriter() {
   );
 }
 
-const stagger = (i: number) => ({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const stagger: any = (i: number) => ({
   hidden: { opacity: 0, y: 24, scale: 0.97 },
   visible: {
     opacity: 1, y: 0, scale: 1,
