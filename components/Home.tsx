@@ -53,7 +53,7 @@ function RoleTypewriter() {
   }, []);
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-      <span style={{ color: "rgba(160,160,180,0.55)", fontWeight: 300 }}>I'm </span>
+      <span style={{ color: "rgba(160,160,180,0.55)", fontWeight: 300 }}>I&apos;m </span>
       <AnimatePresence mode="wait">
         <motion.span
           key={index}
@@ -70,7 +70,7 @@ function RoleTypewriter() {
   );
 }
 
-const stagger: any = (i: number) => ({
+const stagger = (i: number) => ({
   hidden: { opacity: 0, y: 24, scale: 0.97 },
   visible: {
     opacity: 1, y: 0, scale: 1,
@@ -396,7 +396,7 @@ export default function HomePage() {
 
           {/* HERO */}
           <motion.div className="hp-card hp-hero" variants={stagger(0)} initial="hidden" animate="visible">
-            <div className="hp-tag">✦ Portfolio 2025</div>
+            <div className="hp-tag">✦ Portfolio 2026</div>
             <div className="hp-name">Aveeck<br /><span>Pandey.</span></div>
             <div className="hp-role"><RoleTypewriter /></div>
             <p className="hp-desc">
@@ -454,17 +454,17 @@ export default function HomePage() {
                 <div className="hp-dot2" style={{background:"#28c840"}}/>
               </div>
               <div><span className="cp">const</span> <span className="cb">dev</span> = {"{"}</div>
-              <div>&nbsp;&nbsp;<span className="cy">name</span>: <span className="cg">"Aveeck Pandey"</span>,</div>
-              <div>&nbsp;&nbsp;<span className="cy">role</span>: <span className="cg">"Full Stack + AI Engineer"</span>,</div>
-              <div>&nbsp;&nbsp;<span className="cy">stack</span>: [<span className="cg">"React"</span>, <span className="cg">"Python"</span>, <span className="cg">"LLMs"</span>],</div>
+              <div>&nbsp;&nbsp;<span className="cy">name</span>: <span className="cg">&quot;Aveeck Pandey&quot;</span>,</div>
+              <div>&nbsp;&nbsp;<span className="cy">role</span>: <span className="cg">&quot;Full Stack + AI Engineer&quot;</span>,</div>
+              <div>&nbsp;&nbsp;<span className="cy">stack</span>: [<span className="cg">&quot;React&quot;</span>, <span className="cg">&quot;Python&quot;</span>, <span className="cg">&quot;LLMs&quot;</span>],</div>
               <div>&nbsp;&nbsp;<span className="cy">available</span>: <span className="cp">true</span>,</div>
               <div>{"}"}</div>
               <br/>
-              <div><span className="cgr">// Currently exploring</span></div>
+              <div><span className="cgr">{"// Currently exploring"}</span></div>
               <div><span className="cp">const</span> <span className="cb">focus</span> = [</div>
-              <div>&nbsp;&nbsp;<span className="cg">"Agentic AI systems"</span>,</div>
-              <div>&nbsp;&nbsp;<span className="cg">"Multimodal LLMs"</span>,</div>
-              <div>&nbsp;&nbsp;<span className="cg">"Edge ML deployment"</span></div>
+              <div>&nbsp;&nbsp;<span className="cg">&quot;Agentic AI systems&quot;</span>,</div>
+              <div>&nbsp;&nbsp;<span className="cg">&quot;Multimodal LLMs&quot;</span>,</div>
+              <div>&nbsp;&nbsp;<span className="cg">&quot;Edge ML deployment&quot;</span></div>
               <div>];</div>
             </div>
             <div className="hp-clabel">Creative Coding.</div>
@@ -495,7 +495,7 @@ export default function HomePage() {
 
           {/* CTA */}
           <motion.div className="hp-card hp-cta-card hp-cta" variants={stagger(6)} initial="hidden" animate="visible">
-            <div className="hp-ctatext">Let's Build<br/>Something Great.</div>
+            <div className="hp-ctatext">Let&apos;s Build<br/>Something Great.</div>
             <motion.a href="mailto:aveeckpandey.619@email.com" className="hp-ctabtn" whileHover={{scale:1.05}} whileTap={{scale:0.97}}>
               ✦ Get in Touch
             </motion.a>

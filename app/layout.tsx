@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: "Aveeck Portfolio",
 };
 
+import SmoothScroll from "../components/SmoothScroll";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -16,7 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <link rel="icon" href="/favicon.png" type="image/png" />
       </head>
-      <body style={{ margin: 0, background: "#080808" }}>{children}</body>
+      <body style={{ margin: 0, background: "#080808" }}>
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

@@ -1,9 +1,10 @@
+import dynamic from "next/dynamic";
 import Navbar from "../components/Navbar";
 import Home from "../components/Home";
-import Skills from "../components/Skills";
-import Project from "../components/Project";
-import Contact from "../components/Contact";
 
+const Project = dynamic(() => import("../components/Project"), { ssr: true });
+const Skills = dynamic(() => import("../components/Skills"), { ssr: true });
+const Contact = dynamic(() => import("../components/Contact"), { ssr: true });
 
 export default function Page() {
   return (
