@@ -435,7 +435,7 @@ export default function HomePage() {
 
             {/* ── RESUME DOWNLOAD BUTTON (added here, nothing else changed) ── */}
             <motion.a
-              href="/assets/harshibar_s_resume (4).pdf"
+              href="/assets/Aveeck_Pandey.pdf"
               download
               className="hp-resume-btn"
               whileHover={{ scale: 1.04 }}
