@@ -437,6 +437,7 @@ export default function HomePage() {
             <motion.a
               href="/assets/Aveeck_Pandey.pdf"
               download
+              
               className="hp-resume-btn"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
